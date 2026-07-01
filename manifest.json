@@ -1,0 +1,20 @@
+{
+  "name": "Water Tracker",
+  "short_name": "Water",
+  "description": "Track your daily water intake in mL.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b1220",
+  "theme_color": "#0a6edc",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Add 250 mL", "url": "./index.html?add=250" },
+    { "name": "Add 500 mL", "url": "./index.html?add=500" }
+  ]
+}

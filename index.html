@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+  <title>Water Tracker</title>
+  <meta name="description" content="Track your daily water intake in mL." />
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0a6edc" />
+
+  <!-- iOS add-to-home-screen -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Water" />
+  <link rel="apple-touch-icon" href="icons/icon-180.png" />
+
+  <link rel="icon" type="image/png" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <h1>Water</h1>
+      <button id="settingsBtn" class="icon-btn" aria-label="Settings">⚙︎</button>
+    </header>
+
+    <!-- Progress ring -->
+    <section class="ring-wrap">
+      <svg class="ring" viewBox="0 0 220 220" aria-hidden="true">
+        <defs>
+          <linearGradient id="grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#38b2ff" />
+            <stop offset="100%" stop-color="#0a6edc" />
+          </linearGradient>
+        </defs>
+        <circle class="ring-bg" cx="110" cy="110" r="96" />
+        <circle id="ringFill" class="ring-fill" cx="110" cy="110" r="96" />
+      </svg>
+      <div class="ring-center">
+        <div id="total" class="total">0</div>
+        <div class="unit">of <span id="goalLabel">2000</span> mL</div>
+        <div id="percent" class="percent">0%</div>
+      </div>
+    </section>
+
+    <!-- Quick add buttons -->
+    <section class="quick">
+      <button class="quick-btn" data-amt="150">+150</button>
+      <button class="quick-btn" data-amt="250">+250</button>
+      <button class="quick-btn" data-amt="330">+330</button>
+      <button class="quick-btn" data-amt="500">+500</button>
+    </section>
+
+    <!-- Custom add -->
+    <section class="custom">
+      <input id="customInput" type="number" inputmode="numeric" min="1" max="5000"
+             placeholder="Custom mL" aria-label="Custom amount in mL" />
+      <button id="customAdd" class="add-btn">Add</button>
+    </section>
+
+    <button id="undoBtn" class="undo-btn" hidden>↺ Undo last</button>
+
+    <!-- Today's log -->
+    <section class="log">
+      <h2>Today</h2>
+      <ul id="logList" class="log-list"></ul>
+      <p id="emptyLog" class="empty">No water logged yet today.</p>
+    </section>
+
+    <footer class="footer">
+      <span id="dateLabel"></span>
+    </footer>
+  </div>
+
+  <!-- Settings sheet -->
+  <div id="settingsSheet" class="sheet" hidden>
+    <div class="sheet-panel">
+      <h2>Settings</h2>
+      <label class="field">
+        Daily goal (mL)
+        <input id="goalInput" type="number" inputmode="numeric" min="250" max="10000" step="50" />
+      </label>
+      <div class="sheet-actions">
+        <button id="clearToday" class="danger-btn">Clear today's log</button>
+      </div>
+      <button id="closeSettings" class="add-btn">Done</button>
+      <p class="version">Water Tracker · offline-ready</p>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
