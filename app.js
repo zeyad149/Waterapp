@@ -17,6 +17,14 @@
     return d.getFullYear() + "-" + m + "-" + day;
   }
 
+  function dayKeyOffset(n) {
+    // Key for the day that is n days before today (n>=0), in local time.
+    var d = new Date();
+    d.setHours(12, 0, 0, 0); // noon avoids DST edge cases when subtracting days
+    d.setDate(d.getDate() - n);
+    return { key: todayKey(d), date: d };
+  }
+
   function prettyDate(key) {
     var parts = key.split("-");
     var d = new Date(+parts[0], +parts[1] - 1, +parts[2]);
@@ -76,7 +84,12 @@
     toast: document.getElementById("toast"),
     settingsSheet: document.getElementById("settingsSheet"),
     goalInput: document.getElementById("goalInput"),
-    customInput: document.getElementById("customInput")
+    customInput: document.getElementById("customInput"),
+    weekPlot: document.getElementById("weekPlot"),
+    weekDays: document.getElementById("weekDays"),
+    goalLine: document.getElementById("goalLine"),
+    weekAvg: document.getElementById("weekAvg"),
+    weekGoalDays: document.getElementById("weekGoalDays")
   };
 
   el.ringFill.style.strokeDasharray = RING_CIRC.toFixed(2);
@@ -128,6 +141,79 @@
     });
 
     el.dateLabel.textContent = prettyDate(todayKey());
+    renderWeek();
+  }
+
+  function dayTotal(key) {
+    var arr = state.days[key] || [];
+    return arr.reduce(function (s, e) { return s + e.amount; }, 0);
+  }
+
+  function renderWeek() {
+    var goal = state.goal;
+    var todayK = todayKey();
+
+    // Oldest -> newest across the last 7 days (index 0 = 6 days ago).
+    var days = [];
+    for (var n = 6; n >= 0; n--) days.push(dayKeyOffset(n));
+
+    var totals = days.map(function (d) { return dayTotal(d.key); });
+    var maxTotal = Math.max.apply(null, totals);
+    // Headroom above the taller of goal / peak day so value labels never clip.
+    var scaleMax = Math.max(goal, maxTotal) * 1.18 || 1;
+
+    // Weekly stats.
+    var sum = totals.reduce(function (a, b) { return a + b; }, 0);
+    var hit = totals.filter(function (t) { return t >= goal; }).length;
+    el.weekAvg.textContent = Math.round(sum / 7).toLocaleString();
+    el.weekGoalDays.textContent = hit;
+
+    // Goal reference line.
+    el.goalLine.style.bottom = (Math.min(1, goal / scaleMax) * 100).toFixed(1) + "%";
+
+    // Rebuild bars + day labels (keep the goal line node).
+    Array.prototype.slice.call(el.weekPlot.querySelectorAll(".bar"))
+      .forEach(function (b) { b.remove(); });
+    el.weekDays.innerHTML = "";
+
+    days.forEach(function (d, i) {
+      var total = totals[i];
+      var isToday = d.key === todayK;
+
+      var bar = document.createElement("div");
+      bar.className = "bar" +
+        (total === 0 ? " empty" : "") +
+        (total >= goal && total > 0 ? " met" : "") +
+        (isToday ? " today" : "");
+      var pct = total > 0 ? Math.max(3, (total / scaleMax) * 100) : 0;
+      bar.style.height = total > 0 ? pct.toFixed(1) + "%" : "4px";
+
+      if (total > 0) {
+        var val = document.createElement("div");
+        val.className = "bar-val";
+        val.textContent = total >= 1000
+          ? (total / 1000).toFixed(total % 1000 === 0 ? 0 : 1) + "L"
+          : total;
+        bar.appendChild(val);
+      }
+
+      var label = d.date.toLocaleDateString(undefined, { weekday: "short" });
+      bar.setAttribute("role", "img");
+      bar.setAttribute("aria-label", label + ": " + total + " mL");
+      bar.addEventListener("click", function () {
+        toast(label + ": " + total.toLocaleString() + " mL");
+      });
+      el.weekPlot.appendChild(bar);
+
+      var dl = document.createElement("div");
+      dl_set(dl, isToday, label);
+      el.weekDays.appendChild(dl);
+    });
+  }
+
+  function dl_set(node, isToday, label) {
+    node.className = "day-label" + (isToday ? " today" : "");
+    node.textContent = label;
   }
 
   // ---- Actions --------------------------------------------------------

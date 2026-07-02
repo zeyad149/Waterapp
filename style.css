@@ -155,6 +155,94 @@ body {
   cursor: pointer;
 }
 
+/* Weekly dashboard */
+.week { margin-top: 22px; }
+.week-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 0 4px 12px;
+}
+.week-head h2 {
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted);
+  margin: 0;
+}
+.week-stats { display: flex; gap: 14px; font-size: 13px; color: var(--muted); }
+.week-stats b { color: var(--text); font-size: 14px; }
+
+.week-chart {
+  background: var(--card);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius);
+  padding: 16px 14px 12px;
+}
+.week-plot {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 132px;
+}
+.goal-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: 2px dashed rgba(255,255,255,0.22);
+  pointer-events: none;
+  z-index: 1;
+}
+.goal-tag {
+  position: absolute;
+  right: 0;
+  top: -9px;
+  background: var(--card);
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 0 4px;
+}
+.bar {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 4px; /* set inline */
+  background: linear-gradient(180deg, var(--blue-light), var(--blue));
+  border-radius: 5px 5px 0 0;
+  transition: height 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  cursor: pointer;
+}
+.bar.empty { background: var(--card-2); }
+.bar.met { box-shadow: 0 0 0 2px rgba(56,178,255,0.25); }
+.bar.today { outline: 2px solid var(--blue-light); outline-offset: 2px; }
+.bar-val {
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.bar.today .bar-val { color: var(--blue-light); }
+.week-days {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+.week-days .day-label {
+  flex: 1 1 0;
+  min-width: 0;
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+}
+.week-days .day-label.today { color: var(--blue-light); font-weight: 700; }
+
 /* Log */
 .log { margin-top: 18px; }
 .log h2, .sheet-panel h2 {

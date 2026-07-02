@@ -62,6 +62,24 @@
 
     <button id="undoBtn" class="undo-btn" hidden>↺ Undo last</button>
 
+    <!-- Weekly dashboard -->
+    <section class="week">
+      <div class="week-head">
+        <h2>This week</h2>
+        <div class="week-stats">
+          <span><b id="weekAvg">0</b> mL/day avg</span>
+          <span><b id="weekGoalDays">0</b>/7 hit goal</span>
+        </div>
+      </div>
+      <div id="weekChart" class="week-chart" role="img"
+           aria-label="Daily fluid intake for the last 7 days">
+        <div class="week-plot" id="weekPlot">
+          <div class="goal-line" id="goalLine"><span class="goal-tag">goal</span></div>
+        </div>
+        <div class="week-days" id="weekDays"></div>
+      </div>
+    </section>
+
     <!-- Today's log -->
     <section class="log">
       <h2>Today</h2>

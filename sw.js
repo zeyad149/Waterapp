@@ -1,6 +1,6 @@
 /* Simple offline cache for Water Tracker.
  * Bump CACHE when any cached asset changes to force an update. */
-var CACHE = "water-tracker-v1";
+var CACHE = "water-tracker-v2";
 var ASSETS = [
   "./",
   "./index.html",

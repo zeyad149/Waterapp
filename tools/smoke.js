@@ -50,11 +50,22 @@ const server = http.createServer((req, res) => {
   console.log("Total after ?add=330:", totalAfterUrl, "(expect 1200)");
   console.log("URL after add:", page.url(), "(expect no ?add)");
 
+  // Weekly dashboard: 7 bars + 7 day labels, and today's bar reflects today's total.
+  const barCount = await page.locator("#weekPlot .bar").count();
+  const dayCount = await page.locator("#weekDays .day-label").count();
+  const todayBarLabel = await page.getAttribute("#weekPlot .bar.today", "aria-label");
+  const weekAvg = await page.textContent("#weekAvg");
+  console.log("Week bars:", barCount, "day labels:", dayCount, "(expect 7 / 7)");
+  console.log("Today bar aria:", todayBarLabel, "(expect 1200 mL)");
+  console.log("Week avg:", weekAvg);
+
   await page.screenshot({ path: path.join(__dirname, "..", "preview.png") });
 
   console.log("JS errors:", errors.length ? errors : "none");
   const pass = total.trim() === "870" && totalAfterReload.trim() === "870" &&
-    totalAfterUrl.trim() === "1200" && !page.url().includes("add=") && errors.length === 0;
+    totalAfterUrl.trim() === "1200" && !page.url().includes("add=") &&
+    barCount === 7 && dayCount === 7 && /1200 mL/.test(todayBarLabel || "") &&
+    errors.length === 0;
   console.log(pass ? "SMOKE PASS ✅" : "SMOKE FAIL ❌");
 
   await browser.close();
